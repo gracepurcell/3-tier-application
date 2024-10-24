@@ -1,0 +1,25 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: ui-app
+  labels: 
+    name: ui-app
+  namespace: graces-3-tier-namespace
+spec:
+  selector:
+    matchLabels:
+      app: ui-app
+  template:
+    metadata:
+      labels:
+        app: ui-app
+    spec:
+      containers:
+      - name: ui-container
+        image: disgraceful/3-tier-application:db
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80

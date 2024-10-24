@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+  labels:
+    app: db
+  namespace: graces-3-tier-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      name: db
+      labels:
+        app: db
+    spec:
+      containers:
+      - name: postgres-container
+        image: postgres:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+          - containerPort: 5432
+        readinessProbe:
+          exec:
+            command:
+            - psql
+            - -U
+            - postgres
+            - -d
+            - basic3tier
+            - -c
+            - "SELECT 1;"
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        env:
+          - name: POSTGRES_USER
+            value : postgres
+          - name: POSTGRES_PASSWORD
+            value : admin123
+          - name: POSTGRES_DB
+            value: basic3tier
+        volumeMounts:
+        - mountPath: "/var/lib/postgresql/data"
+          name: pvc-storage
+          subPath: postgres
+      volumes:
+      - name: pvc-storage
+        persistentVolumeClaim:
+          claimName: postgres-volume-claim

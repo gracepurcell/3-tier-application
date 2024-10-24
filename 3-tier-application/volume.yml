@@ -1,0 +1,32 @@
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-volume-claim
+  labels:
+    app: db
+  namespace: graces-3-tier-namespace
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: ebs-sc-csi
+  resources:
+    requests:
+      storage: 20Gi
+
+---
+# storageclass-ebs-csi.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ebs-sc-csi
+  namespace: graces-3-tier-namespace
+provisioner: ebs.csi.aws.com
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Retain
+parameters:
+  type: gp3              # EBS volume type: gp2, gp3, io1, io2, etc.
+  fsType: ext4           # File system type
+  iopsPerGB: "10"        # (Optional) Only for io1/io2
+  throughput: "125"      # (Optional) Only for gp3

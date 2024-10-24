@@ -1,0 +1,9 @@
+resources:
+  # - namespace.yml
+  # - db-deployment.yml
+  # - db-service.yml
+  # - volume.yml
+  # - api-deployment.yml
+  # - api-service.yml
+  - ui-deployment.yml
+  - ui-service.yml
