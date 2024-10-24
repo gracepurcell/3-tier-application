@@ -92,11 +92,10 @@ jobs:
           touch ~/3-tier-key.pem
           echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > ~/3-tier-key.pem
           chmod 600 ~/3-tier-key.pem
-          ssh-keyscan -H ${{ secrets.AWS_EC2_PUBLIC_IP }} >> ~/.ssh/known_hosts
       
       - name: Sign into EC2
         run: |
-          sudo ssh -i 3-tier-key.pem ubuntu@${{ secrets.AWS_EC2_PUBLIC_IP }} /bin/bash  << EOF
+          sudo ssh -o StrictHostKeyChecking=no 3-tier-key.pem ubuntu@${{ secrets.AWS_EC2_PUBLIC_IP }} /bin/bash  << EOF
           git clone https://github.com/gracepurcell/3-tier-application.git
           cd 3-tier-application
           docker compose up
