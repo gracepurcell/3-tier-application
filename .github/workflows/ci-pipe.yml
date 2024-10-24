@@ -39,7 +39,7 @@ jobs:
 
   api-image:
     runs-on: ubuntu-latest
-    needs: build-test-api
+    needs: build-api
     steps:
       - name: checkout app
         uses: actions/checkout@v4
@@ -62,7 +62,7 @@ jobs:
 
   ui-image:
     runs-on: ubuntu-latest
-    needs: build-test-api
+    needs: build-api
     steps:
       - name: checkout app
         uses: actions/checkout@v4
