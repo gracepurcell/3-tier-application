@@ -89,7 +89,8 @@ jobs:
     steps:
       - name: Store Key on Job runner
         run: |
-          mkdir -p ~/.shh
+          mkdir -p ~/.ssh
+          touch ~/.ssh/id_rsa
           echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.AWS_EC2_PUBLIC_IP }} >> ~/.ssh/known_hosts
