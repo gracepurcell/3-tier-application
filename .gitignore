@@ -1,0 +1,6 @@
+aws/*
+
+awscliv2.zip
+
+*.dll
+**/FileContentIndex
