@@ -95,5 +95,5 @@ jobs:
           sudo ssh -i ~/3-tier-key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.AWS_EC2_PUBLIC_IP }} /bin/bash  << EOF
           git clone https://github.com/gracepurcell/3-tier-application.git
           cd 3-tier-application
-          docker compose up
+          sudo docker compose up
           EOF
