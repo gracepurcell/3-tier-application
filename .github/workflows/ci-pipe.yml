@@ -1,0 +1,67 @@
+name: "Build, Test and Deploy App to Docker with EC2"
+
+on: 
+  push:
+    branches: [main]
+
+jobs: 
+
+  build-api:
+    runs-on: ubuntu-latest
+    services:
+      postgres: 
+        image: 'postgres:latest'
+        env:
+          POSTGRES_PASSWORD: admin123
+          POSTGRES_USER: postgres
+          POSTGRES_DB: basic3tier
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres -d basic3tier"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    steps:
+      - name: checkout app
+        uses: actions/checkout@v4
+
+      - name: Setup Dotnet for Application
+        uses: actions/setup-dotnet@v3
+        with: 
+          dotnet-version: '7'
+
+      - name: Handle Dependencies
+        run: dotnet restore
+        working-directory: ./api
+
+      - name: Build Backend
+        run: nohup dotnet build --configuration Release --no-restore &
+        working-directory: ./api
+        env:
+          ConnectionStrings__Basic3Tier: "Host=postgres;Port=5432;Database=basic3tier;Username=postgres;Password=admin123"
+
+
+  # build-ui:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: checkout app
+  #       uses: actions/checkout@v4
+
+  #     - name: Setup Node.js for Applications
+  #       uses: actions/setup-node@v3
+  #       with: 
+  #         node-version: '16'
+
+  #     - name: Install Client Dependencies
+  #       run: npm install
+  #       working-directory: ./client
+
+  #     - name: Build Client
+  #       run: npm run build
+  #       working-directory: ./client
+
+
+  # test: 
+
+  # deploy:
